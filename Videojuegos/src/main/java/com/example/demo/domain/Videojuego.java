@@ -8,6 +8,7 @@ import javax.persistence.Id;
 @Table(name="videojuego",schema="formacion")
 public class Videojuego {
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	private String nombre;
 	private String descripcion;

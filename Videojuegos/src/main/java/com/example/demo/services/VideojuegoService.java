@@ -17,6 +17,17 @@ public class VideojuegoService {
 	}
 	
 	public List<Videojuego> buscarDestacados(){
-		return videojuegoRepository.findAll();
+		return videojuegoRepository.BuscarTodos();
+	}
+	public List<Videojuego> buscar(String consulta){
+		return videojuegoRepository.findByNombreContaining(consulta);
+	}
+	
+	public List<Videojuego> buscarPorDistribuidor(int distribuidorId){
+		return videojuegoRepository.buscarPorDistribuidor(distribuidorId);
+	}
+	
+	public Videojuego guardar(Videojuego videojuego) {
+		return videojuegoRepository.save(videojuego);
 	}
 }

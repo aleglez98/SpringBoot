@@ -14,22 +14,33 @@
 <body>
 	<nav class="navbar navbar-dark bg-dark">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="#">
+			<a class="navbar-brand" th:href="@{/}">
 				<img src="img/logo.png" alt="" width="30" height="24">
 				Tienda VJ
 			</a>
+			<form th:action="@{/buscar}" class="d-flex">
+        		<input name="q" class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search">
+        		<button class="btn btn-outline-success" type="submit">Buscar</button>
+      		</form>
 			
 		</div>
 	</nav>
 	
 	<div class="container mt-4 vj-destacados">
 		<div class="row">
+			<div class="col col-md-12 text-right mb-4">
+				<a th:href="@{/videojuegos/crear}" class="btn btn-outline-success"> Crear Videojuego</a>
+			</div>
+		</div>
+		<div class="row">
 			<div th:each="juego: ${videojuegos}" class="col-md-3 mb-4">
 				<div class="card" >
 					<img th:src="${juego.imagenUrl}" alt="imagen vieojuego">
 					<div class="card-body">
 						<h5 th:text="${juego.nombre}" class="card-title"></h5>
-						<span class="badge rounded-pill bg-danger" th:text="${juego.distribuidor.nombre}">Danger</span>
+						<p>
+							  <a th:href="@{/videojuegoPorDistribucion(distribuidorId=${juego.distribuidor.id})}" class="badge rounded-pill bg-danger" th:text="${juego.distribuidor.nombre}"></a>
+						</p>
 						<p th:text="${juego.descripcion}" class="card-text"></p>
 					</div>
 					<div class="card.footer text-muted">
