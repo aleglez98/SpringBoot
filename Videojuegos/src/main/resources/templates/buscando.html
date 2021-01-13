@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+	crossorigin="anonymous">
+<link href="/css/Videojuegos.css" rel="stylesheet">
+
+
+<title>Tienda Videojuegos</title>
+</head>
+<body>
+	<nav class="navbar navbar-dark bg-dark">
+		<div class="container-fluid">
+			<a class="navbar-brand" th:href="@{/}"> <img
+				th:src="@{/img/logo.png}" alt="" width="30" height="24">
+				Tienda VJ
+			</a>
+		</div>
+	</nav>
+	<div class="container mt-4 vj-destacados">
+		<div class="row">
+			<div class="col-md-12">
+				<h1>Buscador</h1>
+				<form method="POST" id="buscador" th:action="@{/buscador/categorias}" th:object=${videojuego}>
+					<div class="form-group">
+						<label for="nombre">Nombre</label> 
+						<input type="text" class="form-control" th:field="*{nombre}" id="nombre" placeholder="Nombre del videojuego">
+					</div>
+					
+					<div class="form-group">
+						<label for="categoria">Categoria</label> 
+						<select class="form-control" id="categoria" th:field=*{categoria}>
+							<option th:each="tipo : ${categorias}" th:value="${tipo}" th:text="${tipo}"></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="estado">Estado</label> 
+						<select class="form-control" id="situacion" th:field=*{estado}>
+							<option th:each="tipo : ${estados}" th:value="${tipo.id}" th:text="${tipo.estado}"></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="distribuciones">Distribuciones</label> 
+						<select class="form-control" id="distribucion" th:field=*{distribuidor}>
+							<option th:each="tipo : ${distribuciones}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="transporte">Transportes</label> 
+						<select class="form-control" id="transport" th:field=*{distribuidor.transportes} multiple>
+							<option th:each="tipo : ${transportes}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
+						</select>
+					</div>
+
+					<button type="submit" class="btn btn-primary">Buscar</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="container mt-4 vj-destacados">
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">Nombre</th>
+					<th scope="col">Estado</th>
+					<th scope="col">Categoria</th>
+					<th scope="col">Distribuidor</th>
+					<th scope="col">Transporte</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="videojuego : ${juegos}">
+					<td>
+						<span th:text="${videojuego.nombre}"> Nombre </span>
+					</td>
+					<td>
+						<span th:text="${videojuego.estado.estado}"> Estado</span>
+					</td>
+					<td>
+						<span th:text="${videojuego.categoria}"> Categoria </span>
+					</td>
+					<td>
+						<span th:text="${videojuego.distribuidor.nombre}">Distribuidor </span>
+					</td>
+					<td>
+						<span 
+					 	 th:each="continent : ${videojuego.distribuidor.transportes}" 
+					 	 th:fragment="frag (continent)" 
+					 	 th:text="${continent.nombre} + ' , '" > Transportes 
+						</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
+		integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-	beta1/dist/js/bootstrap.min.js"
+		integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj"
+		crossorigin="anonymous"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	
+	<script th:inline="javascript">
+	$('#distribucion').on('change', function() {
+		$.ajax({
+			url:"/buscador/categorias/ajax",
+			type:"GET",
+			data: "distribuidor="+$('#distribucion').val(),
+			success: function(respuesta){
+				console.log(respuesta);
+				$('#transport').empty()
+				$.each(respuesta,function(temp){
+					console.log(respuesta[temp].nombre)
+					$('#transport').append('<option value=' + respuesta[temp].id + '>' + respuesta[temp].nombre + '</option>')
+				})
+				//$("#transport").replaceAll(respuesta);
+			},
+			error: function(respuesta){
+				console.log("no se ha podido obtener la informacion");
+			}
+		})
+		//$('transporte').load('/buscador/categorias/ajax',"distribuidor="+$('#distribucion').val())
+		
+	})
+	</script> 
+	
+</body>
+</html>

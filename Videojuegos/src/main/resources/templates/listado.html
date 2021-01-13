@@ -7,7 +7,7 @@
 
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-<link href="css/Videojuegos.css" rel="stylesheet" >
+<link href="/css/Videojuegos.css" rel="stylesheet" >
 
 <title>Tienda Videojuegos</title>
 </head>
@@ -15,14 +15,10 @@
 	<nav class="navbar navbar-dark bg-dark">
 		<div class="container-fluid">
 			<a class="navbar-brand" th:href="@{/}">
-				<img src="img/logo.png" alt="" width="30" height="24">
+				<img src="/img/logo.png" alt="" width="30" height="24">
 				Tienda VJ
 			</a>
-			<form th:action="@{/buscar}" class="d-flex">
-        		<input name="q" class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search">
-        		<button class="btn btn-outline-success" type="submit">Buscar</button>
-      		</form>
-			
+        	<a th:href="@{/buscador/categorias}" class="btn btn-primary">Buscador</a>
 		</div>
 	</nav>
 	
@@ -41,10 +37,14 @@
 						<p>
 							  <a th:href="@{/videojuegoPorDistribucion(distribuidorId=${juego.distribuidor.id})}" class="badge rounded-pill bg-danger" th:text="${juego.distribuidor.nombre}"></a>
 						</p>
+						<p>
+							  <a th:href="@{/videojuegoPorCategoria(categoriaName=${juego.categoria})}" class="badge bg-info text-dark" th:text="${juego.categoria}"></a>
+						</p>
 						<p th:text="${juego.descripcion}" class="card-text"></p>
 					</div>
 					<div class="card.footer text-muted">
 						<a href="#" class="btn btn-primary">Ver Detalles</a>
+						<a th:text="${juego.estado.estado}"></a>
 					</div>
 				</div>
 			</div>

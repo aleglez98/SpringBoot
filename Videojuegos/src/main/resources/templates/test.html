@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>Test</h1>
+	<div>
+		<span th:text="${numero}"></span>
+	</div>
+	<select class="form-control" id="eleccion">
+		<option value=1>Numeros</option>
+		<option value=2>Letras</option>
+	</select>
+	<div id="solucion">Letras o numeros</div>
+
+	<div>
+		<a href="/t/4">Recargamos -></a>
+	</div>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script th:inline="javascript">
+	$('#eleccion').on('change', function() {
+    	$.ajax({
+			url:"/numerosletras",
+			type:"GET",
+			data: "variable="+$('#eleccion').val(),
+			success: function(respuesta){
+				console.log(respuesta);
+			},
+			error: function(respuesta){
+				console.log("no se ha podido obtener la informacion");
+			}
+    	})
+	})
+    </script>
+</body>
+</html>

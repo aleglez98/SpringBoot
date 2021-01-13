@@ -25,11 +25,14 @@ public class VideojuegoAbmController {
 	public String mostrarFormAlta(Model model){
 		model.addAttribute("distribuidores",distribuidorService.buscarTodos());
 		model.addAttribute("videojuego", new Videojuego());
+		Videojuego video = new Videojuego();
+		System.out.println(video);
 		return "/formvideojuego";
 	}
 	
 	@PostMapping("/videojuegos/guardar")
 	public String guardar(Videojuego videojuego) {
+		System.out.println(videojuego);
 		videojuegoService.guardar(videojuego);
 		return "redirect:/";
 	}

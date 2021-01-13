@@ -19,7 +19,7 @@ public class listarVideojuegos {
 	
 	public listarVideojuegos(VideojuegoService videojuegoService) {
 		super();
-		this.videojuegoService = videojuegoService;
+		this.videojuegoService = videojuegoService;	
 	}
 
 	
@@ -37,10 +37,18 @@ public class listarVideojuegos {
 		return "listado";
 	}
 	
-	@RequestMapping("/buscar")
-	public String buscar(@RequestParam("q") String consulta, Model model) {
-		List<Videojuego> juegos = videojuegoService.buscar(consulta);
+	@RequestMapping("/videojuegoPorCategoria")
+	public String listarVideojuegosPorCategoria(String categoriaName, Model model) {
+		List<Videojuego> juegos = videojuegoService.buscarPorCategoria(categoriaName);
 		model.addAttribute("videojuegos",juegos);
 		return "listado";
 	}
+	
+	@RequestMapping("/buscar")
+	public String buscar(@RequestParam("q") String consulta, Model model) {
+		List<Videojuego> juegos = videojuegoService.buscar(consulta,consulta);
+		model.addAttribute("videojuegos",juegos);
+		return "listado";
+	}
+	
 }
