@@ -38,7 +38,7 @@
 					<div class="form-group">
 						<label for="categoria">Categoria</label> 
 						<select class="form-control" id="categoria" th:field=*{categoria}>
-							<option th:each="tipo : ${categorias}" th:value="${tipo}" th:text="${tipo}"></option>
+							<option th:each="tipo : ${categorias}" th:selected="${juegos.get(0).categoria}" th:value="${tipo}" th:text="${tipo}"></option>
 						</select>
 					</div>
 					<div class="form-group">
@@ -138,6 +138,45 @@
 		
 	})
 	</script> 
-	
+	<script th:inline="javascript">
+		function createCookie(name,value) {
+        	document.cookie = name+"="+value+"; path=/buscador/categorias";
+    	}
+
+    	function readCookie(name) {
+        	var nameEQ = name + "=";
+        	var ca = document.cookie.split(';');
+        	for(var i=0;i < ca.length;i++) {
+        	    var c = ca[i];
+            	while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            	if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        	}
+        	return null;
+    	}
+
+    	function eraseCookie(name) {
+        	createCookie(name,"",-1);
+    	}
+    	
+    	function setValue(name,id){
+
+        	var _variable = readCookie(name);
+        	if(_variable != null){
+            	console.log(_variable);
+            	//Asignamos el valor de la cookie
+            	document.getElementById(id).value = _variable; 
+    		}
+        }
+		
+		$('#categoria').on('change', function() {
+
+			var Categoria = $('#categoria').val();
+		
+			eraseCookie("pickedCategoria");
+			let mostrando = document.getElementById('categoria').value;
+			createCookie("pickedCategoria",mostrando,1);
+		})
+		setValue("pickedCategoria",'categoria')
+	</script>
 </body>
 </html>
