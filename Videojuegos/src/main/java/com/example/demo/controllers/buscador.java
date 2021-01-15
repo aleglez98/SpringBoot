@@ -23,7 +23,9 @@ import com.example.demo.domain.Distribuidor;
 import com.example.demo.domain.Estado;
 import com.example.demo.domain.Transporte;
 import com.example.demo.domain.Videojuego;
-import com.example.demo.dto.formularioDTO;
+import com.example.demo.dto.FormularioDTO;
+import com.example.demo.dto.ListadoDTO;
+import com.example.demo.dto.VideojuegoDTO;
 import com.example.demo.services.DistribuidorService;
 import com.example.demo.services.EstadoService;
 import com.example.demo.services.VideojuegoService;
@@ -70,7 +72,6 @@ public class buscador {
 		model.addAttribute("distribuciones",distribuidorService.buscarTodos());
 		List<Transporte> transportes = listatransportes();
 		model.addAttribute("transportes",transportes);
-		model.addAttribute("form", new formularioDTO());
 		return model;
 	}
 	
@@ -79,6 +80,7 @@ public class buscador {
 	@RequestMapping("/buscador/categorias")
 	public String mostrarBuscador(Model model){
 		model = inicialiazar(model);
+		model.addAttribute("form", new FormularioDTO());
 		return "buscando";
 	}
 	
@@ -102,30 +104,40 @@ public class buscador {
 	}
 	
 	@PostMapping("/buscador/categorias")
-	public String busqueda(Model model,Videojuego videojuego){
+	public String busqueda(Model model,FormularioDTO videojuego){
 		System.out.println(videojuego);
 		List<Videojuego> videojueggos1 = new ArrayList<>();
 		List<Videojuego> videojueggos = videojuegoService.buscarPorNombre(videojuego.getNombre());
 		if(videojuego.getEstado() != null) {
-			videojueggos1 = videojuegoService.buscarPorEstado(videojuego.getEstado().getId());
+			videojueggos1 = videojuegoService.buscarPorEstado(videojuego.getEstado());
 			videojueggos.retainAll(videojueggos1);
 		}
 		if(videojuego.getCategoria() != null) {
 			videojueggos1 = videojuegoService.buscarPorCategoria(videojuego.getCategoria());
 			videojueggos.retainAll(videojueggos1);
 		}
-		if(videojuego.getDistribuidor().getId() != null) {
-			videojueggos1 = videojuegoService.buscarPorDistribuidor(videojuego.getDistribuidor().getId());
+		if(videojuego.getDistribuidor() != null) {
+			videojueggos1 = videojuegoService.buscarPorDistribuidor(videojuego.getDistribuidor());
 			videojueggos.retainAll(videojueggos1);
 		}
-		if(videojuego.getDistribuidor().getTransportes() != null) {
-			for(int i=0;i<videojuego.getDistribuidor().getTransportes().size();i++) {
-					videojueggos1 = videojuegoService.buscarPorTransporte(videojuego.getDistribuidor().getTransportes().get(i), listatransportes());
-					videojueggos.retainAll(videojueggos1);
-			}
-		}
+		ListadoDTO listado = new ListadoDTO();
+		
+		videojueggos.forEach(juego -> {
+			VideojuegoDTO video = new VideojuegoDTO();
+			video.setNombre(juego.getNombre());
+			video.setCategoria(juego.getCategoria());
+			video.setEstado(juego.getEstado().getEstado());
+			video.setDistribuidor(juego.getDistribuidor().getNombre());
+			List<String> tr = new ArrayList<>();
+			juego.getDistribuidor().getTransportes().forEach(transporte -> {
+				tr.add(transporte.getNombre());
+			});
+			video.setTransportes(tr);
+			listado.getVideojuego().add(video);
+		});
 		model = inicialiazar(model);
-		model.addAttribute("juegos",videojueggos);
+		model.addAttribute("listado",listado);
+		model.addAttribute("form", videojuego);
 		return "buscando";
 	}
 	

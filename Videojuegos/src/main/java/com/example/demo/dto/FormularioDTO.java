@@ -1,16 +1,17 @@
 package com.example.demo.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
-public class formularioDTO implements Serializable{
+public class FormularioDTO implements Serializable{
 	
 	private String nombre;
 	private String categoria;
 	private Integer estado;
 	private Integer distribuidor;
-	private Integer transporte;
+	private List<String> transporte;
 	
-	public formularioDTO() {
+	public FormularioDTO() {
 		super();
 	}
 	public String getNombre() {
@@ -37,10 +38,10 @@ public class formularioDTO implements Serializable{
 	public void setDistribuidor(Integer distribuidor) {
 		this.distribuidor = distribuidor;
 	}
-	public Integer getTransporte() {
+	public List<String> getTransporte() {
 		return transporte;
 	}
-	public void setTransporte(Integer transporte) {
+	public void setTransporte(List<String> transporte) {
 		this.transporte = transporte;
 	}
 	

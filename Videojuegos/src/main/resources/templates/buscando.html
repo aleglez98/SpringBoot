@@ -77,24 +77,24 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="videojuego : ${juegos}">
+				<tr th:each="juego : ${listado.videojuego}">
 					<td>
-						<span th:text="${videojuego.nombre}"> Nombre </span>
+						<span th:text="${juego.nombre}"> Nombre </span>
 					</td>
 					<td>
-						<span th:text="${videojuego.estado.estado}"> Estado</span>
+						<span th:text="${juego.estado}"> Estado</span>
 					</td>
 					<td>
-						<span th:text="${videojuego.categoria}"> Categoria </span>
+						<span th:text="${juego.categoria}"> Categoria </span>
 					</td>
 					<td>
-						<span th:text="${videojuego.distribuidor.nombre}">Distribuidor </span>
+						<span th:text="${juego.distribuidor}">Distribuidor </span>
 					</td>
 					<td>
 						<span 
-					 	 th:each="continent : ${videojuego.distribuidor.transportes}" 
+					 	 th:each="continent : ${juego.transportes}" 
 					 	 th:fragment="frag (continent)" 
-					 	 th:text="${continent.nombre} + ' , '" > Transportes 
+					 	 th:text="${continent} + ' , '" > Transportes 
 						</span>
 					</td>
 				</tr>
