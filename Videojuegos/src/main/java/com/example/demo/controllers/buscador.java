@@ -23,6 +23,7 @@ import com.example.demo.domain.Distribuidor;
 import com.example.demo.domain.Estado;
 import com.example.demo.domain.Transporte;
 import com.example.demo.domain.Videojuego;
+import com.example.demo.dto.formularioDTO;
 import com.example.demo.services.DistribuidorService;
 import com.example.demo.services.EstadoService;
 import com.example.demo.services.VideojuegoService;
@@ -69,7 +70,7 @@ public class buscador {
 		model.addAttribute("distribuciones",distribuidorService.buscarTodos());
 		List<Transporte> transportes = listatransportes();
 		model.addAttribute("transportes",transportes);
-		model.addAttribute("videojuego", new Videojuego());
+		model.addAttribute("form", new formularioDTO());
 		return model;
 	}
 	
@@ -82,10 +83,11 @@ public class buscador {
 	}
 	
 	@RequestMapping("/buscador/categorias/ajax")
-	public @ResponseBody List<Transporte> ajaxTransportes(ModelMap model,@RequestParam("distribuidor") Integer distribuidor){
-		System.out.println(distribuidor);
+	public String ajaxTransportes(ModelMap model,@RequestParam("distribuidor") Integer distribuidor){
+		System.out.println("["+ distribuidor);
 		List<Distribuidor> distribuidores = distribuidorService.buscarTodos();
 		List<Transporte> transportes = new ArrayList<>();
+		System.out.println(distribuidores);
 		distribuidores.forEach(distribuidr -> {
 			System.out.println(distribuidr.getId() + " - " + distribuidor);
 			if(distribuidr.getId() == distribuidor) {
@@ -94,9 +96,9 @@ public class buscador {
 			}
 		});
 		
-		model.addAttribute("${videojuego.distribuidor.transportes}",transportes);
+		model.addAttribute("transportes",transportes);
 		
-		return transportes;
+		return "buscando :: transportes";
 	}
 	
 	@PostMapping("/buscador/categorias")

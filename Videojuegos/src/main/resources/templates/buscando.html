@@ -29,7 +29,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<h1>Buscador</h1>
-				<form method="POST" id="buscador" th:action="@{/buscador/categorias}" th:object=${videojuego}>
+				<form method="POST" id="buscador" th:action="@{/buscador/categorias}" th:object=${form}>
 					<div class="form-group">
 						<label for="nombre">Nombre</label> 
 						<input type="text" class="form-control" th:field="*{nombre}" id="nombre" placeholder="Nombre del videojuego">
@@ -38,7 +38,7 @@
 					<div class="form-group">
 						<label for="categoria">Categoria</label> 
 						<select class="form-control" id="categoria" th:field=*{categoria}>
-							<option th:each="tipo : ${categorias}" th:selected="${juegos.get(0).categoria}" th:value="${tipo}" th:text="${tipo}"></option>
+							<option th:each="tipo : ${categorias}" th:value="${tipo}" th:text="${tipo}"></option>
 						</select>
 					</div>
 					<div class="form-group">
@@ -49,14 +49,14 @@
 					</div>
 					<div class="form-group">
 						<label for="distribuciones">Distribuciones</label> 
-						<select class="form-control" id="distribucion" th:field=*{distribuidor}>
+						<select class="form-control" th:field=*{distribuidor}>
 							<option th:each="tipo : ${distribuciones}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
 						</select>
 					</div>
 					<div class="form-group">
 						<label for="transporte">Transportes</label> 
-						<select class="form-control" id="transport" th:field=*{distribuidor.transportes} multiple>
-							<option th:each="tipo : ${transportes}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
+						<select class="form-control" th:field=*{transporte}>
+							<option th:fragment="transportes" th:each="tipo : ${transportes}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
 						</select>
 					</div>
 
@@ -114,69 +114,15 @@
 		integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj"
 		crossorigin="anonymous"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-	
 	<script th:inline="javascript">
-	$('#distribucion').on('change', function() {
-		$.ajax({
-			url:"/buscador/categorias/ajax",
-			type:"GET",
-			data: "distribuidor="+$('#distribucion').val(),
-			success: function(respuesta){
-				console.log(respuesta);
-				$('#transport').empty()
-				$.each(respuesta,function(temp){
-					console.log(respuesta[temp].nombre)
-					$('#transport').append('<option value=' + respuesta[temp].id + '>' + respuesta[temp].nombre + '</option>')
-				})
-				//$("#transport").replaceAll(respuesta);
-			},
-			error: function(respuesta){
-				console.log("no se ha podido obtener la informacion");
-			}
-		})
-		//$('transporte').load('/buscador/categorias/ajax',"distribuidor="+$('#distribucion').val())
-		
-	})
-	</script> 
-	<script th:inline="javascript">
-		function createCookie(name,value) {
-        	document.cookie = name+"="+value+"; path=/buscador/categorias";
-    	}
-
-    	function readCookie(name) {
-        	var nameEQ = name + "=";
-        	var ca = document.cookie.split(';');
-        	for(var i=0;i < ca.length;i++) {
-        	    var c = ca[i];
-            	while (c.charAt(0)==' ') c = c.substring(1,c.length);
-            	if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-        	}
-        	return null;
-    	}
-
-    	function eraseCookie(name) {
-        	createCookie(name,"",-1);
-    	}
-    	
-    	function setValue(name,id){
-
-        	var _variable = readCookie(name);
-        	if(_variable != null){
-            	console.log(_variable);
-            	//Asignamos el valor de la cookie
-            	document.getElementById(id).value = _variable; 
-    		}
-        }
-		
-		$('#categoria').on('change', function() {
-
-			var Categoria = $('#categoria').val();
-		
-			eraseCookie("pickedCategoria");
-			let mostrando = document.getElementById('categoria').value;
-			createCookie("pickedCategoria",mostrando,1);
-		})
-		setValue("pickedCategoria",'categoria')
+		$(function() {
+	  		//$("#transporte").load('/buscador/categorias/ajax', $("#distribuidor").serialize());
+		  	$('#distribuidor').on('change', function() {
+		  		console.log($("#distribuidor").val())
+		  		$("#transporte").load('/buscador/categorias/ajax', $("#distribuidor").serialize());
+		  		console.log($("#transporte").val())
+		  	});
+	  	});
 	</script>
 </body>
 </html>
