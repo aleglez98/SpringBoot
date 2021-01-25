@@ -42,6 +42,11 @@ public class VideojuegoDTO implements Serializable {
 	public void setTransportes(List<String> transportes) {
 		this.transportes = transportes;
 	}
+	@Override
+	public String toString() {
+		return "VideojuegoDTO [nombre=" + nombre + ", estado=" + estado + ", categoria=" + categoria + ", distribuidor="
+				+ distribuidor + ", transportes=" + transportes + "]";
+	}
 	
 	
 }

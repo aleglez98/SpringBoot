@@ -19,13 +19,13 @@ public interface VideojuegoRepository extends JpaRepository<Videojuego,Integer> 
 	@Query("select v from Videojuego v where v.distribuidor.id = ?1 order by v.nombre")
 	List<Videojuego> buscarPorDistribuidor(int distribuidor);
 	
-	@Query("from Videojuego v where v.nombre like %?1%")
+	@Query("from Videojuego v where v.nombre like %?1% order by v.nombre")
 	List<Videojuego> findByNombreContaining(String consulta);
 
 //	@Query("select v from Videojuego v where v.nombre like \'%?1%\'")
 	List<Videojuego> findByNombreContainingOrCategoriaContaining(String consulta,String consulta1);
 	
-	@Query("from Videojuego v where v.categoria like %?1%")
+	@Query("from Videojuego v where v.categoria like %?1% order by v.nombre")
 	List<Videojuego> findByCategoriaContaining(String d);
 
 	@Query("select v from Videojuego v where v.estado.id = ?1 order by v.nombre")

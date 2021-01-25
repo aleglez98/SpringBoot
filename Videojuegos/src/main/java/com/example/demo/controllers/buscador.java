@@ -5,12 +5,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.PathParam;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,7 +44,7 @@ import com.example.demo.services.VideojuegoService;
 @Controller
 public class buscador {
 	
-	
+
 	private final EstadoService estadoService;
 	private final VideojuegoService videojuegoService;
 	private final DistribuidorService distribuidorService;
@@ -86,15 +96,11 @@ public class buscador {
 	
 	@RequestMapping("/buscador/categorias/ajax")
 	public String ajaxTransportes(ModelMap model,@RequestParam("distribuidor") Integer distribuidor){
-		System.out.println("["+ distribuidor);
 		List<Distribuidor> distribuidores = distribuidorService.buscarTodos();
 		List<Transporte> transportes = new ArrayList<>();
-		System.out.println(distribuidores);
 		distribuidores.forEach(distribuidr -> {
-			System.out.println(distribuidr.getId() + " - " + distribuidor);
 			if(distribuidr.getId() == distribuidor) {
 				transportes.addAll(distribuidr.getTransportes());
-				System.out.println(transportes);
 			}
 		});
 		
@@ -103,9 +109,10 @@ public class buscador {
 		return "buscando :: transportes";
 	}
 	
-	@PostMapping("/buscador/categorias")
-	public String busqueda(Model model,FormularioDTO videojuego){
-		System.out.println(videojuego);
+	
+	@RequestMapping("/buscador/categoria")
+	public String busqueda(Model model,FormularioDTO videojuego,@PathParam("page") Optional<Integer> page) {
+        
 		List<Videojuego> videojueggos1 = new ArrayList<>();
 		List<Videojuego> videojueggos = videojuegoService.buscarPorNombre(videojuego.getNombre());
 		if(videojuego.getEstado() != null) {
@@ -120,8 +127,7 @@ public class buscador {
 			videojueggos1 = videojuegoService.buscarPorDistribuidor(videojuego.getDistribuidor());
 			videojueggos.retainAll(videojueggos1);
 		}
-		ListadoDTO listado = new ListadoDTO();
-		
+		List<VideojuegoDTO> listado = new ArrayList<>();
 		videojueggos.forEach(juego -> {
 			VideojuegoDTO video = new VideojuegoDTO();
 			video.setNombre(juego.getNombre());
@@ -133,10 +139,39 @@ public class buscador {
 				tr.add(transporte.getNombre());
 			});
 			video.setTransportes(tr);
-			listado.getVideojuego().add(video);
+			listado.add(video);
 		});
+		System.out.println(page);
+		int currentPage = page.orElse(1);
+        int pageSize = 5;
+        Pageable pageable=PageRequest.of(currentPage, pageSize,Sort.by("nombre").ascending());
+		int start = (int) pageable.getOffset() - 5;
+		int end;
+		if((start+pageSize) > listado.size()) {
+			end = listado.size();
+		}
+		else {
+			end = start+pageSize;
+		}
+		ListadoDTO lista = new ListadoDTO();
+		Page<VideojuegoDTO> pages = new PageImpl<VideojuegoDTO>(listado.subList(start, end), pageable, listado.size());
+		int totalPages = pages.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                .boxed()
+                .collect(Collectors.toList());
+            //lista.setPageNumbers(pageNumbers);
+            //lista.setTotalItems(listado.size());
+            model.addAttribute("pageNumbers", pageNumbers);
+            model.addAttribute("totalItems",listado.size());
+        }
 		model = inicialiazar(model);
-		model.addAttribute("listado",listado);
+		//lista.setTotalPages(totalPages);
+		//lista.setListado(pages);
+		//lista.setTotalPages(totalPages);
+		//model.addAttribute(lista);
+		model.addAttribute("totalPages",totalPages);
+		model.addAttribute("listado",pages);
 		model.addAttribute("form", videojuego);
 		return "buscando";
 	}
