@@ -82,6 +82,7 @@ public class buscador {
 		model.addAttribute("distribuciones",distribuidorService.buscarTodos());
 		List<Transporte> transportes = listatransportes();
 		model.addAttribute("transportes",transportes);
+		
 		return model;
 	}
 	
@@ -153,25 +154,23 @@ public class buscador {
 		else {
 			end = start+pageSize;
 		}
-		ListadoDTO lista = new ListadoDTO();
+		
 		Page<VideojuegoDTO> pages = new PageImpl<VideojuegoDTO>(listado.subList(start, end), pageable, listado.size());
 		int totalPages = pages.getTotalPages();
+		List<Integer> pageNumbers = new ArrayList<>();
         if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+            pageNumbers = IntStream.rangeClosed(1, totalPages)
                 .boxed()
                 .collect(Collectors.toList());
-            //lista.setPageNumbers(pageNumbers);
-            //lista.setTotalItems(listado.size());
-            model.addAttribute("pageNumbers", pageNumbers);
-            model.addAttribute("totalItems",listado.size());
+            
+            //model.addAttribute("pageNumbers", pageNumbers);
+           // model.addAttribute("totalItems",listado.size());
         }
 		model = inicialiazar(model);
-		//lista.setTotalPages(totalPages);
-		//lista.setListado(pages);
-		//lista.setTotalPages(totalPages);
-		//model.addAttribute(lista);
-		model.addAttribute("totalPages",totalPages);
-		model.addAttribute("listado",pages);
+		
+		model.addAttribute("lista",new ListadoDTO(pageNumbers,listado.size(),totalPages,pages,videojuego));
+		//model.addAttribute("totalPages",totalPages);
+		//model.addAttribute("page",pages);
 		model.addAttribute("form", videojuego);
 		return "buscando";
 	}
