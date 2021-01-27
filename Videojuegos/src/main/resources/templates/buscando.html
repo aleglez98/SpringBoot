@@ -106,8 +106,7 @@
 			</div>
 			<div class = "col-sm-3">
 				<span th:each="pageNumber : ${lista.pageNumbers}">
-					<a id="button" class="aLink"  th:onclick="'javascript:buscar(' + ${pageNumber} + ');'" th:text=${pageNumber}></a>
-    				<!--  <a id="btn" th:text=${pageNumber}>Number</a>-->
+					<a th:onclick="'javascript:buscar(' + ${pageNumber} + ');'" th:text=${pageNumber} th:class="active" selected></a>
     			</span>
 			</div>
 		</div>
@@ -147,9 +146,6 @@
 		}
 		$('.aLink').click(function(){
 			buscar(1);	
-		})
-		$('#btn').click(function(){
-			buscar();	
 		})
 	</script>
 </body>

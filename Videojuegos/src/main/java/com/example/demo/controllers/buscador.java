@@ -5,11 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-import javax.servlet.http.HttpServletRequest;
+
 import javax.websocket.server.PathParam;
 
 import org.springframework.data.domain.Page;
@@ -20,17 +17,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.domain.Distribuidor;
-import com.example.demo.domain.Estado;
 import com.example.demo.domain.Transporte;
 import com.example.demo.domain.Videojuego;
 import com.example.demo.dto.FormularioDTO;
@@ -169,17 +159,17 @@ public class buscador {
 		Page<VideojuegoDTO> pages = new PageImpl<VideojuegoDTO>(listado.subList(start, end), pageable, listado.size());
 		int totalPages = pages.getTotalPages();
 		List<Integer> pageNumbers = new ArrayList<>();
-        if (totalPages > 0) {
-            pageNumbers = IntStream.rangeClosed(1, totalPages)
-                .boxed()
-                .collect(Collectors.toList());
-        }
+		int iterador=1;int tamano=listado.size();
+		while(iterador<tamano) {
+			pageNumbers.add(iterador);
+			iterador++;
+			tamano=tamano - pageSize;
+		}
+		pageNumbers.add(iterador);
+		
 		model = inicialiazar(model);
-		//model.addAttribute("lista",pages);
 		VideojuegoDTO videojuego = new VideojuegoDTO();
-		model.addAttribute("lista",new ListadoDTO(pageNumbers,listado.size(),totalPages,pages,videojuego));
-		//model.addAttribute("form", videojuego);
-		 
+		model.addAttribute("lista",new ListadoDTO(pageNumbers,listado.size(),totalPages,pages,videojuego));		 
 		return "buscando :: tabla";
 	}
 	

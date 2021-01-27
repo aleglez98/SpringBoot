@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 
 public class ListadoDTO implements Serializable{
 	
+	
+	private static final long serialVersionUID = 1L;
 	private List<Integer> pageNumbers;
 	private Integer TotalItems;
 	private Integer TotalPages;

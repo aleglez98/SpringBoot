@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.domain.Estado;
 import com.example.demo.domain.Transporte;
 import com.example.demo.domain.Videojuego;
 import com.example.demo.repository.VideojuegoRepository;
