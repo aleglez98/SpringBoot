@@ -29,7 +29,7 @@ public class VideojuegoService {
 		return videojuegoRepository.findByNombreContaining(consulta);
 	}
 	
-	public List<Videojuego> buscarPorDistribuidor(int distribuidorId){
+	public List<Videojuego> buscarPorDistribuidor(String distribuidorId){
 		return videojuegoRepository.buscarPorDistribuidor(distribuidorId);
 	}
 	
@@ -41,7 +41,7 @@ public class VideojuegoService {
 		return videojuegoRepository.save(videojuego);
 	}
 
-	public List<Videojuego> buscarPorEstado(Integer id) {
+	public List<Videojuego> buscarPorEstado(String id) {
 		return videojuegoRepository.buscarPorEstado(id);
 	}
 

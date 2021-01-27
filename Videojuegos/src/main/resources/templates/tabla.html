@@ -1,0 +1,34 @@
+<table id="tabla" th:fragment=tabla class="table">
+			<thead>
+				<tr>
+					<th scope="col">Nombre</th>
+					<th scope="col">Estado</th>
+					<th scope="col">Categoria</th>
+					<th scope="col">Distribuidor</th>
+					<th scope="col">Transporte</th>
+				</tr>
+			</thead>
+			 <tbody th:unless="${lista} == null" th:object="${lista}">
+				<tr th:each="juego : *{page}">
+					<td>
+						<span th:text="${juego.nombre}"> Nombre </span>
+					</td>
+					<td>
+						<span th:text="${juego.estado}"> Estado</span>
+					</td>
+					<td>
+						<span th:text="${juego.categoria}"> Categoria </span>
+					</td>
+					<td>
+						<span th:text="${juego.distribuidor}">Distribuidor </span>
+					</td>
+					<td>
+						<span 
+					 	 th:each="continent : ${juego.transportes}" 
+					 	 th:fragment="frag (continent)" 
+					 	 th:text="${continent} + ' , '" > Transportes 
+						</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>

@@ -29,44 +29,44 @@
 		<div class="row">
 			<div class="col-md-12">
 				<h1>Buscador</h1>
-				<form id="buscador" th:object=${form}>
+				<form id="buscador">
 					<div class="form-group">
 						<label for="nombre">Nombre</label> 
-						<input type="text" class="form-control" th:field="*{nombre}" id="nombre" placeholder="Nombre del videojuego">
+						<input type="text" class="form-control"  id="nombre" placeholder="Nombre del videojuego">
 					</div>
 					
 					<div class="form-group">
 						<label for="categoria">Categoria</label> 
-						<select class="form-control" id="categoria" th:field=*{categoria}>
+						<select class="form-control" id="categoria">
 							<option th:each="tipo : ${categorias}" th:value="${tipo}" th:text="${tipo}"></option>
 						</select>
 					</div>
 					<div class="form-group">
 						<label for="estado">Estado</label> 
-						<select class="form-control" id="situacion" th:field=*{estado}>
+						<select class="form-control" id="situacion" >
 							<option th:each="tipo : ${estados}" th:value="${tipo.id}" th:text="${tipo.estado}"></option>
 						</select>
 					</div>
 					<div class="form-group">
 						<label for="distribuciones">Distribuciones</label> 
-						<select class="form-control" th:field=*{distribuidor}>
+						<select class="form-control" >
 							<option th:each="tipo : ${distribuciones}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
 						</select>
 					</div>
 					<div class="form-group">
 						<label for="transporte">Transportes</label> 
-						<select class="form-control" th:field=*{transporte}>
+						<select class="form-control">
 							<option th:fragment="transportes" th:each="tipo : ${transportes}" th:value="${tipo.id}" th:text="${tipo.nombre}"></option>
 						</select>
 					</div>
 
-					<a id="button" class="btn btn-primary">Buscar</a>
+					<a id="button" class="aLink">Buscar</a>
 				</form>
 			</div>
 		</div>
 	</div>
-	<div class="container mt-4 vj-destacados">
-		<table id="tabla" th:fragment=tabla class="table">
+	<div class="container mt-4 vj-destacados table" th:fragment=tabla id="tabla">
+		<table>
 			<thead>
 				<tr>
 					<th scope="col">Nombre</th>
@@ -100,15 +100,14 @@
 				</tr>
 			</tbody>
 		</table>
-		<div th:fragment="nacion" id="" th:unless="${lista} == null" class = "row col-sm-10">
+		<div th:unless="${lista} == null" class = "row col-sm-10">
 			<div class = "col-sm-2">
 				Total Rows: [[${lista.totalItems}]]
 			</div>
-			<div class = "col-sm-1">
+			<div class = "col-sm-3">
 				<span th:each="pageNumber : ${lista.pageNumbers}">
-    				<a th:href="@{/buscador/categorias/aja(nombre=${form.nombre},categoria=${form.categoria},estado=${form.estado},distribuidor=${form.distribuidor},transporte=${form.transporte}, page=${pageNumber})}"
-        			th:text=${pageNumber}
-        			th:class="active"></a>
+					<a id="button" class="aLink"  th:onclick="'javascript:buscar(' + ${pageNumber} + ');'" th:text=${pageNumber}></a>
+    				<!--  <a id="btn" th:text=${pageNumber}>Number</a>-->
     			</span>
 			</div>
 		</div>
@@ -134,18 +133,23 @@
 	  	});
 	</script>
 	<script th:inline="javascript">
-		$('a').click(function(){
-			var miMapa = new Map();
+		function buscar(page){
 			$.ajax({
 				url:'/buscador/categorias/aja',
-				data: "nombre=" + $("#nombre").val() + "&categoria=" + $("#categoria").val() + "&estado=" + $("#situacion").val() + "&distribuidor=" + $("#distribuidor").val(),
+				data: "nombre=" + $("#nombre").val() + "&categoria=" + $("#categoria").val() + "&estado=" + $("#situacion").val() + "&distribuidor=" + $("#distribuidor").val() + "&page=" + page,
 				success: function(result){
 					console.log(result);
+					//$('#contenedor-listado').load(result);
 					document.getElementById('tabla').innerHTML = result;
 					//$('#tabla').load(result);
 				}
 			})
-			//$('#tabla').load('/buscador/categorias/aja',$("#nombre").serialize(),$("#categoria").serialize());
+		}
+		$('.aLink').click(function(){
+			buscar(1);	
+		})
+		$('#btn').click(function(){
+			buscar();	
 		})
 	</script>
 </body>

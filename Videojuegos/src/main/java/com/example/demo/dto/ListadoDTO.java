@@ -12,15 +12,17 @@ public class ListadoDTO implements Serializable{
 	private Integer TotalItems;
 	private Integer TotalPages;
 	private Page<VideojuegoDTO> page;
+	private VideojuegoDTO videojuego;
 	
 	
 	
-	public ListadoDTO(List<Integer> pageNumbers, Integer totalItems, Integer totalPages, Page<VideojuegoDTO> page) {
+	public ListadoDTO(List<Integer> pageNumbers, Integer totalItems, Integer totalPages, Page<VideojuegoDTO> page, VideojuegoDTO videojuego) {
 		super();
 		this.pageNumbers = pageNumbers;
 		this.TotalItems = totalItems;
 		this.TotalPages = totalPages;
 		this.page = page;
+		this.setVideojuego(videojuego);
 	}
 	public List<Integer> getPageNumbers() {
 		return pageNumbers;
@@ -46,6 +48,12 @@ public class ListadoDTO implements Serializable{
 	}
 	public void setPage(Page<VideojuegoDTO> page) {
 		this.page = page;
+	}
+	public VideojuegoDTO getVideojuego() {
+		return videojuego;
+	}
+	public void setVideojuego(VideojuegoDTO videojuego) {
+		this.videojuego = videojuego;
 	}
 
 	

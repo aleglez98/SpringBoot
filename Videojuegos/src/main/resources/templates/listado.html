@@ -35,7 +35,7 @@
 					<div class="card-body">
 						<h5 th:text="${juego.nombre}" class="card-title"></h5>
 						<p>
-							  <a th:href="@{/videojuegoPorDistribucion(distribuidorId=${juego.distribuidor.id})}" class="badge rounded-pill bg-danger" th:text="${juego.distribuidor.nombre}"></a>
+							  <a th:href="@{/videojuegoPorDistribucion(distribuidorId=${juego.distribuidor.nombre})}" class="badge rounded-pill bg-danger" th:text="${juego.distribuidor.nombre}"></a>
 						</p>
 						<p>
 							  <a th:href="@{/videojuegoPorCategoria(categoriaName=${juego.categoria})}" class="badge bg-info text-dark" th:text="${juego.categoria}"></a>

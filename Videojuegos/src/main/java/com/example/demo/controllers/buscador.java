@@ -112,29 +112,29 @@ public class buscador {
 	
 	
 	@RequestMapping("/buscador/categorias/aja")
-	public String busqueda(Model model,@PathParam("nombre") String nombre,@PathParam("categoria") String categoria,@RequestParam("estado") Optional<Integer> estado,@RequestParam("distribuidor") Optional<Integer> distribuidor,@PathParam("page") Optional<Integer> page) {
+	public String busqueda(Model model,@PathParam("nombre") String nombre,@PathParam("categoria") String categoria,@PathParam("estado") String estado,@PathParam("distribuidor") String distribuidor,@PathParam("page") Integer page) {
         String cadena = "";
         System.out.println(nombre);
-        System.out.println(categoria);
 		List<Videojuego> videojueggos1 = new ArrayList<>();
 		List<Videojuego> videojueggos = new ArrayList<>();
-		if(nombre != null) {
+		if(nombre != "") {
 			videojueggos = videojuegoService.buscarPorNombre(nombre);
 		}else {
 			videojueggos = videojuegoService.buscarPorNombre(cadena);
 		}
-		if(!estado.isEmpty()) {
-			videojueggos1 = videojuegoService.buscarPorEstado(estado.get());
+		if(estado != "") {
+			videojueggos1 = videojuegoService.buscarPorEstado(estado);
 			videojueggos.retainAll(videojueggos1);
 		}
-		if(!categoria.isEmpty()) {
+		if(categoria != "") {
 			videojueggos1 = videojuegoService.buscarPorCategoria(categoria);
 			videojueggos.retainAll(videojueggos1);
 		}
-		if(!distribuidor.isEmpty()) {
-			videojueggos1 = videojuegoService.buscarPorDistribuidor(distribuidor.get());
-			videojueggos.retainAll(videojueggos1);
-		}
+		/*
+		 * if(distribuidor != "undefined") { videojueggos1 =
+		 * videojuegoService.buscarPorDistribuidor(distribuidor);
+		 * videojueggos.retainAll(videojueggos1); }
+		 */
 		List<VideojuegoDTO> listado = new ArrayList<>();
 		videojueggos.forEach(juego -> {
 			VideojuegoDTO video = new VideojuegoDTO();
@@ -149,8 +149,12 @@ public class buscador {
 			video.setTransportes(tr);
 			listado.add(video);
 		});
-		System.out.println(page);
-		int currentPage = page.orElse(1);
+		int currentPage;
+		if(page != null) {
+			currentPage = page;
+		}else {
+			currentPage = 1;
+		}
         int pageSize = 5;
         Pageable pageable=PageRequest.of(currentPage, pageSize,Sort.by("nombre").ascending());
 		int start = (int) pageable.getOffset() - 5;
@@ -172,10 +176,10 @@ public class buscador {
         }
 		model = inicialiazar(model);
 		//model.addAttribute("lista",pages);
-		model.addAttribute("lista",new ListadoDTO(pageNumbers,listado.size(),totalPages,pages));
-		/*
-		 * model.addAttribute("form", videojuego);
-		 */		
+		VideojuegoDTO videojuego = new VideojuegoDTO();
+		model.addAttribute("lista",new ListadoDTO(pageNumbers,listado.size(),totalPages,pages,videojuego));
+		//model.addAttribute("form", videojuego);
+		 
 		return "buscando :: tabla";
 	}
 	

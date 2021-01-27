@@ -207,12 +207,6 @@ public class VideojuegoRepositoryImpl implements VideojuegoRepository{
 	}
 
 	@Override
-	public List<Videojuego> buscarPorDistribuidor(int distribuidor) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<Videojuego> findByNombreContaining(String consulta) {
 		// TODO Auto-generated method stub
 		return null;
@@ -231,7 +225,13 @@ public class VideojuegoRepositoryImpl implements VideojuegoRepository{
 	}
 
 	@Override
-	public List<Videojuego> buscarPorEstado(Integer id) {
+	public List<Videojuego> buscarPorDistribuidor(String distribuidor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Videojuego> buscarPorEstado(String id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

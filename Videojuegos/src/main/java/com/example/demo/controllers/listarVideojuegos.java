@@ -31,7 +31,7 @@ public class listarVideojuegos {
 	}
 	
 	@RequestMapping("/videojuegoPorDistribucion")
-	public String listarVideojuegosPorDistribucion(int distribuidorId, Model model) {
+	public String listarVideojuegosPorDistribucion(String distribuidorId, Model model) {
 		List<Videojuego> juegos = videojuegoService.buscarPorDistribuidor(distribuidorId);
 		model.addAttribute("videojuegos",juegos);
 		return "listado";
