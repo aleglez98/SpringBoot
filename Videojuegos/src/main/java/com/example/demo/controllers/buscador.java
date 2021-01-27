@@ -111,21 +111,28 @@ public class buscador {
 	}
 	
 	
-	@RequestMapping("/buscador/categoria")
-	public String busqueda(Model model,FormularioDTO videojuego,@PathParam("page") Optional<Integer> page) {
-        
+	@RequestMapping("/buscador/categorias/aja")
+	public String busqueda(Model model,@PathParam("nombre") String nombre,@PathParam("categoria") String categoria,@RequestParam("estado") Optional<Integer> estado,@RequestParam("distribuidor") Optional<Integer> distribuidor,@PathParam("page") Optional<Integer> page) {
+        String cadena = "";
+        System.out.println(nombre);
+        System.out.println(categoria);
 		List<Videojuego> videojueggos1 = new ArrayList<>();
-		List<Videojuego> videojueggos = videojuegoService.buscarPorNombre(videojuego.getNombre());
-		if(videojuego.getEstado() != null) {
-			videojueggos1 = videojuegoService.buscarPorEstado(videojuego.getEstado());
+		List<Videojuego> videojueggos = new ArrayList<>();
+		if(nombre != null) {
+			videojueggos = videojuegoService.buscarPorNombre(nombre);
+		}else {
+			videojueggos = videojuegoService.buscarPorNombre(cadena);
+		}
+		if(!estado.isEmpty()) {
+			videojueggos1 = videojuegoService.buscarPorEstado(estado.get());
 			videojueggos.retainAll(videojueggos1);
 		}
-		if(videojuego.getCategoria() != null) {
-			videojueggos1 = videojuegoService.buscarPorCategoria(videojuego.getCategoria());
+		if(!categoria.isEmpty()) {
+			videojueggos1 = videojuegoService.buscarPorCategoria(categoria);
 			videojueggos.retainAll(videojueggos1);
 		}
-		if(videojuego.getDistribuidor() != null) {
-			videojueggos1 = videojuegoService.buscarPorDistribuidor(videojuego.getDistribuidor());
+		if(!distribuidor.isEmpty()) {
+			videojueggos1 = videojuegoService.buscarPorDistribuidor(distribuidor.get());
 			videojueggos.retainAll(videojueggos1);
 		}
 		List<VideojuegoDTO> listado = new ArrayList<>();
@@ -162,17 +169,14 @@ public class buscador {
             pageNumbers = IntStream.rangeClosed(1, totalPages)
                 .boxed()
                 .collect(Collectors.toList());
-            
-            //model.addAttribute("pageNumbers", pageNumbers);
-           // model.addAttribute("totalItems",listado.size());
         }
 		model = inicialiazar(model);
-		
-		model.addAttribute("lista",new ListadoDTO(pageNumbers,listado.size(),totalPages,pages,videojuego));
-		//model.addAttribute("totalPages",totalPages);
-		//model.addAttribute("page",pages);
-		model.addAttribute("form", videojuego);
-		return "buscando";
+		//model.addAttribute("lista",pages);
+		model.addAttribute("lista",new ListadoDTO(pageNumbers,listado.size(),totalPages,pages));
+		/*
+		 * model.addAttribute("form", videojuego);
+		 */		
+		return "buscando :: tabla";
 	}
 	
 }

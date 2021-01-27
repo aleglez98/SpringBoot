@@ -29,7 +29,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<h1>Buscador</h1>
-				<form method="GET" id="buscador" th:action="@{/buscador/categoria}" th:object=${form}>
+				<form id="buscador" th:object=${form}>
 					<div class="form-group">
 						<label for="nombre">Nombre</label> 
 						<input type="text" class="form-control" th:field="*{nombre}" id="nombre" placeholder="Nombre del videojuego">
@@ -60,13 +60,13 @@
 						</select>
 					</div>
 
-					<button id="button" type="submit" class="btn btn-primary">Buscar</button>
+					<a id="button" class="btn btn-primary">Buscar</a>
 				</form>
 			</div>
 		</div>
 	</div>
-	<div th:fragment=tabla class="container mt-4 vj-destacados">
-		<table class="table" th:unless="${lista} == null">
+	<div class="container mt-4 vj-destacados">
+		<table id="tabla" th:fragment=tabla class="table">
 			<thead>
 				<tr>
 					<th scope="col">Nombre</th>
@@ -76,7 +76,7 @@
 					<th scope="col">Transporte</th>
 				</tr>
 			</thead>
-			 <tbody th:object="${lista}">
+			 <tbody th:unless="${lista} == null" th:object="${lista}">
 				<tr th:each="juego : *{page}">
 					<td>
 						<span th:text="${juego.nombre}"> Nombre </span>
@@ -100,15 +100,13 @@
 				</tr>
 			</tbody>
 		</table>
-	</div>
-	<div th:unless="${lista} == null">
-		<div class = "row col-sm-10">
+		<div th:fragment="nacion" id="" th:unless="${lista} == null" class = "row col-sm-10">
 			<div class = "col-sm-2">
 				Total Rows: [[${lista.totalItems}]]
 			</div>
 			<div class = "col-sm-1">
 				<span th:each="pageNumber : ${lista.pageNumbers}">
-    				<a th:href="@{/buscador/categoria(nombre=${form.nombre},categoria=${form.categoria},estado=${form.estado},distribuidor=${form.distribuidor},transporte=${form.transporte}, page=${pageNumber})}"
+    				<a th:href="@{/buscador/categorias/aja(nombre=${form.nombre},categoria=${form.categoria},estado=${form.estado},distribuidor=${form.distribuidor},transporte=${form.transporte}, page=${pageNumber})}"
         			th:text=${pageNumber}
         			th:class="active"></a>
     			</span>
@@ -136,8 +134,18 @@
 	  	});
 	</script>
 	<script th:inline="javascript">
-		$("#button").on("submit", function(){
-			$("tabla").load('/buscador/categoria')
+		$('a').click(function(){
+			var miMapa = new Map();
+			$.ajax({
+				url:'/buscador/categorias/aja',
+				data: "nombre=" + $("#nombre").val() + "&categoria=" + $("#categoria").val() + "&estado=" + $("#situacion").val() + "&distribuidor=" + $("#distribuidor").val(),
+				success: function(result){
+					console.log(result);
+					document.getElementById('tabla').innerHTML = result;
+					//$('#tabla').load(result);
+				}
+			})
+			//$('#tabla').load('/buscador/categorias/aja',$("#nombre").serialize(),$("#categoria").serialize());
 		})
 	</script>
 </body>
